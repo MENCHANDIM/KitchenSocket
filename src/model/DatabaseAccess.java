@@ -320,20 +320,20 @@ public class DatabaseAccess {
 		databaseAccess.connectdb();
 		
 		//Ingredient table CRUD
-		
-		databaseAccess.retrieveIngredient();
-		
-		databaseAccess.insertIngredient();
-		
-		databaseAccess.retrieveIngredient();
-		
-		databaseAccess.updateIngredient();
-		
-		databaseAccess.retrieveIngredient();
-		
-		databaseAccess.deleteIngredient();
-		
-		databaseAccess.retrieveIngredient();
+//		
+//		databaseAccess.retrieveIngredient();
+//		
+//		databaseAccess.insertIngredient();
+//		
+//		databaseAccess.retrieveIngredient();
+//		
+//		databaseAccess.updateIngredient();
+//		
+//		databaseAccess.retrieveIngredient();
+//		
+//		databaseAccess.deleteIngredient();
+//		
+//		databaseAccess.retrieveIngredient();
 		
 		//recipe table CRUD
 		
