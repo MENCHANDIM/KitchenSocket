@@ -1,2 +1,0 @@
-# KitchenSocket
-software engineering project
