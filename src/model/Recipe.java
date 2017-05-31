@@ -15,6 +15,7 @@ public class Recipe implements Serializable {
 
 	private String name;
 	private String briefDescription;
+	private String description;
 	private String thumbnail;
 	private ArrayList<Ingredient> ingredients = new ArrayList<Ingredient>();
 	private ArrayList<Step> steps = new ArrayList<Step>();
@@ -31,6 +32,7 @@ public class Recipe implements Serializable {
 		super();
 		this.name = "";
 		this.briefDescription = "";
+		this.description = "";
 		this.thumbnail = "";
 		this.ingredients = null;
 		this.steps = null;
@@ -51,7 +53,7 @@ public class Recipe implements Serializable {
 		this.servingNum = servingNum;
 	}
 
-	public Recipe(String name, String tag, int servingNum, String briefDescription, String thumbnail,
+	public Recipe(String name, String tag, int servingNum,String description, String briefDescription, String thumbnail,
 			ArrayList<Ingredient> ingredients, ArrayList<Step> steps, int preparationTime, int cookTime,
 			Date createdAt) {
 		super();
@@ -59,6 +61,7 @@ public class Recipe implements Serializable {
 		this.tag = tag;
 		this.servingNum = servingNum;
 		this.briefDescription = briefDescription;
+		this.description = description;
 		this.thumbnail = thumbnail;
 		this.ingredients = ingredients;
 		this.steps = steps;
@@ -83,6 +86,14 @@ public class Recipe implements Serializable {
 		this.briefDescription = briefDescription;
 	}
 
+	public String getDescription(){
+		return description;
+	}
+	
+	public void setDescription(String description){
+		this.description = description;
+	}
+	
 	public String getThumbnail() {
 		return thumbnail;
 	}
@@ -214,8 +225,8 @@ public class Recipe implements Serializable {
 				+ thumbnail + '\n' + "PreparationTime: " + preparationTime + '\n' + "CookTime: " + cookTime + '\n'
 				+ "CreatedAt: " + createdAt + '\n' + "DeletedAt:" + '\n' + deletedAt + "UpdatedAt: " + updatedAt + '\n'
 				+ "IsFavourite=" + isFavourite + '\n' + "====================" + '\n' + "Ingredients:" + '\n'
-				+ "====================" + '\n' + ingredients + '\n' + "====================" + '\n'
-				+ "Steps:" + '\n' + "====================" + '\n' + showSteps(steps) + '\n';
+				+ "====================" + '\n' + ingredients + '\n' + "====================" + '\n' + "Steps:" + '\n'
+				+ "====================" + '\n' + showSteps(steps) + '\n';
 	}
 
 	private String showSteps(ArrayList<Step> steps) {

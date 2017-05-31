@@ -9,7 +9,7 @@ import java.util.LinkedList;
  * @author breukerm
  */
 public class CookBook {
-
+	private DatabaseAccess dataBaseAccess;
 	private LinkedList<Recipe> myRecipeList = new LinkedList<>();
 	
     /**
@@ -33,16 +33,12 @@ public class CookBook {
         
         
 
-        recipe.addPreparationStep(new Step("Mix together cornstarch and 1 tbsp. of the soy sauce in a medium bowl.","123"));
-//TODO
-        //        recipe.addPreparationStep("Add chicken, toss well, and set aside to marinate for 30 minutes.");
-//        recipe.addPreparationStep("Meanwhile, mix together the remaining 3 tbsp. soy sauce, rice wine, sugar, stock, vinegar, sesame oil, and dark soy sauce.");
-//        recipe.addPreparationStep("Set aside.");
-//        recipe.addPreparationStep("Heat peanut oil in a wok or large nonstick skillet over high heat until just beginning to smoke.");
-//        recipe.addPreparationStep("Add chilis, half the scallions, garlic, ginger, and chicken and stir-fry until chicken is golden, 3-5 minutes.");
-//        recipe.addPreparationStep("Add soy sauce mixture and stir-fry until sauce thickens, about 2 minutes.");
-//        recipe.addPreparationStep("Stir in peanuts.");
-//        recipe.addPreparationStep("Garnish with remaining scallions.");
+        recipe.addPreparationStep(new Step("1. step for GongBaoJiding","picUri"));
+        recipe.addPreparationStep(new Step("2. step for GongBaoJiding.","picUri"));
+        recipe.addPreparationStep(new Step("3. step for GongBaoJiding.","picUri"));
+        recipe.addPreparationStep(new Step("4. step for GongBaoJiding.","picUri"));
+        recipe.addPreparationStep(new Step("5. step for GongBaoJiding.","picUri"));
+     
 
         recipe.setPreparationTime(30);
         recipe.setCookTime(10);
@@ -55,7 +51,7 @@ public class CookBook {
      *
      * @return  the recipe
      */
-    private static Recipe createHongShaoRou() {
+    static Recipe createHongShaoRou() {
         Recipe recipe = new Recipe("Hong Shao Rou", "Hunan Dish", 4);
 
      //   recipe.addIngredient(new Ingredient("pork belly", 0.5, "kg", "cut into 2cm pieces"));
@@ -65,16 +61,18 @@ public class CookBook {
         recipe.addIngredient(new Ingredient("light soy sauce", 1.0, "tablespoon"));
         recipe.addIngredient(new Ingredient("dark soy sauce", 0.5, "tablespoon"));
         recipe.addIngredient(new Ingredient("chicken stock or water", 2.0, "cups"));
+        
+        recipe.addFavourite();
+        
+        recipe.setBriefDescription("Brief Description of Hong Shao Rou.");
+        
+        recipe.setDescription("Description of Hong Shao Rou.");
 
-//        recipe.addPreparationStep("Bring a pot of water to a boil and blanch the pork for a couple minutes.");
-//        recipe.addPreparationStep("Take the pork out of the pot and set aside.");
-//        recipe.addPreparationStep("Over low heat, add oil and sugar to your wok.");
-//        recipe.addPreparationStep("Melt the sugar slightly and add the pork.");
-//        recipe.addPreparationStep("Raise the heat to medium and cook until the pork is lightly browned.");
-//        recipe.addPreparationStep("Turn the heat back down to low and add cooking wine, light soy sauce, dark soy sauce, and chicken stock.");
-//        recipe.addPreparationStep("Cover and simmer for about 60 minutes to 90 minutes until pork is fork tender.");
-//        recipe.addPreparationStep("Every 5-10 minutes, stir to prevent burning and add water if it gets too dry.");
-//        recipe.addPreparationStep("Once the pork is fork tender, if there is still a lot of visible liquid, uncover the wok, turn up the heat, and stir continuously the sauce has reduced to a glistening coating.");
+        recipe.addPreparationStep(new Step("1. step for Hong Shao Rou","picUri"));
+        recipe.addPreparationStep(new Step("2. step for Hong Shao Rou.","picUri"));
+        recipe.addPreparationStep(new Step("3. step for Hong Shao Rou.","picUri"));
+        recipe.addPreparationStep(new Step("4. step for Hong Shao Rou.","picUri"));
+        recipe.addPreparationStep(new Step("5. step for Hong Shao Rou.","picUri"));
 
         recipe.setPreparationTime(5);
         recipe.setCookTime(100);
@@ -104,17 +102,11 @@ public class CookBook {
         recipe.addIngredient(new Ingredient("light soy sauce", 1.0, "tablespoon"));
         recipe.addIngredient(new Ingredient("salt", 1.0, "teaspoon"));
 
-//        recipe.addPreparationStep("Soak the sweet potato noodles with hot water around 30 minutes.");
-//        recipe.addPreparationStep("Transfer out and set aside.");
-//        recipe.addPreparationStep("In the serving bowls and mix all the seasonings.");
-//        recipe.addPreparationStep("Heat up peanuts oil in pan to stir-fry the mashed garlic until aroma.");
-//        recipe.addPreparationStep("Mix the garlic oil with the seasonings.");
-//        recipe.addPreparationStep("Add some spring onions and corianders in serving bowls.");
-//        recipe.addPreparationStep("Pour in boiling water or stock to tune the seasonings.");
-//        recipe.addPreparationStep("Add vinegar and light soy sauce.");
-//        recipe.addPreparationStep("Mix well and set aside.");
-//        recipe.addPreparationStep("Cook soaked sweet potato noodles around 3~5 minutes until you can break the noodles with your fingers.");
-//        recipe.addPreparationStep("Transfer the noodles out to the serving bowls and then add top with pickled vegetables, roasted peanuts and chopped spring onions and coriander. ");
+        recipe.addPreparationStep(new Step("1. step for SuanLaFen","picUri"));
+        recipe.addPreparationStep(new Step("2. step for SuanLaFen.","picUri"));
+        recipe.addPreparationStep(new Step("3. step for SuanLaFen.","picUri"));
+        recipe.addPreparationStep(new Step("4. step for SuanLaFen.","picUri"));
+        recipe.addPreparationStep(new Step("5. step for SuanLaFen.","picUri"));
 
         recipe.setPreparationTime(30);
         recipe.setCookTime(5);
@@ -126,21 +118,24 @@ public class CookBook {
      * Program entry point.
      *
      * @param args  command line arguments; not used.
+     * @throws SQLException 
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
     	
-    	
+    
         CookBook cb = new CookBook();
-//TODO
-        cb.add(createGongBaoJiding());
-        cb.add(createHongShaoRou());
-        cb.add(createSuanLaFen());
         
-        
-        	
-        
+       cb.dataBaseAccess = new DatabaseAccess();
+       
+       cb.dataBaseAccess.connectdb();
 
-        cb.getRecipe("Gong Bao Jiding");
+      cb.dataBaseAccess.insertRecipe(createHongShaoRou());
+      
+      cb.dataBaseAccess.insertRecipe(createSuanLaFen());
+      
+      cb.dataBaseAccess.insertRecipe(createGongBaoJiding());
+
+      cb.dataBaseAccess.retrieveRecipe();
 
     }
 

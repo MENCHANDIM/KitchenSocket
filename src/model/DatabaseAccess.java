@@ -3,13 +3,12 @@ package model;
 import java.sql.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-
-
+import java.util.ArrayList;
+import java.util.TreeSet;
 
 /**
- * connect with the database and perform queries
- * include all operations (create, read, update and 
- * delete) of recipes, steps and ingredients
+ * connect with the database and perform queries include all operations (create,
+ * read, update and delete) of recipes, steps and ingredients
  * 
  * @author Gang Shao
  * @author Qiwen Gu
@@ -21,16 +20,17 @@ import java.text.SimpleDateFormat;
  *
  */
 public class DatabaseAccess {
-	
+
 	Connection con;
-	
+
 	/**
 	 * build the connection
+	 * 
 	 * @throws SQLException
 	 */
 	public void connectdb() throws SQLException {
 
-		con = DriverManager.getConnection("jdbc:mysql://localhost:3306/cookbook", "root", "Nocturnes");
+		con = DriverManager.getConnection("jdbc:mysql://localhost:3306/cookbook", "root", "1234");
 
 		if (!con.isClosed()) {
 
@@ -39,9 +39,8 @@ public class DatabaseAccess {
 		}
 
 	}
-	
-	public void retrieveRecipe() throws SQLException {
 
+	public void retrieveRecipe() throws SQLException {
 
 		Statement stmt = con.createStatement();
 
@@ -94,25 +93,64 @@ public class DatabaseAccess {
 		}
 
 	}
-	
-	public void insertRecipe() throws SQLException {
+
+	public void insertRecipe(Recipe recipe) throws SQLException {
 
 		Statement stmt = con.createStatement();
+		ArrayList<Ingredient> ingredients = recipe.getIngredients();
+		ArrayList<Step> steps = recipe.getSteps();
 
+		int favor = 0;
+		if (recipe.isFavourite() == true) {
+			favor = 1;
+		}
 		int rset = stmt.executeUpdate(
-				"INSERT INTO `cookbook`.`recipe` (`name`, `servings`, `preparationTime`, `cookingTime`, `description`, `isFavourite`, `briefDescription`) VALUES ('DD','3','10','10','AAA','1','EEE');");
+				"INSERT INTO `cookbook`.`recipe` (`name`, `servings`, `preparationTime`, `cookingTime`, `description`, `isFavourite`, `briefDescription`) VALUES ( '"
+						+ recipe.getName() + "' ,   " + recipe.getServingNum() + " ,  " + recipe.getPreparationTime()
+						+ " ,   " + recipe.getCookTime() + " ,   '" + recipe.getDescription() + " ',   " + favor
+						+ " ,  ' " + recipe.getBriefDescription() + " ');");
 
+		
+		/*  Have problem, Shao gang and Shi Wenbin will change later. */
+		
+		
+		ResultSet  rset1 = stmt.executeQuery("SELECT * FROM cookbook.recipe ;");
 
-	}
+		int  recipeId = 0 ;
+		
+		 while (rset1.next()) {
+		
+		 recipeId = rset1.getInt("recipe_id");		
+
+		 }
+		 
+		 int stepOrder = recipe.getSteps().size();
+			
+		 for (int i = 0; i < steps.size(); i++) {
+		
+		 insertStep(recipeId, i+1 ,steps.get(i).getStepDescription(),steps.get(i).getPicUri());
+		 
+		 }
+		 
+		 }
+		//// for (int i = 0; i < ingredients.size(); i++) {
+		////
+		//// insertIngredient(ingredients.get(i), recipe);
+		////
+		//// }
+		//
+		// 
+
 	
+
 	public void deleteRecipe() throws SQLException {
 
 		Statement stmt = con.createStatement();
 
 		int rset = stmt.executeUpdate("DELETE FROM `cookbook`.`recipe` WHERE `recipe_id`='5';");
-		
-	} 
-	
+
+	}
+
 	public void updateRecipe() throws SQLException {
 
 		Statement stmt = con.createStatement();
@@ -120,61 +158,51 @@ public class DatabaseAccess {
 		int rset = stmt.executeUpdate("UPDATE `cookbook`.`recipe` SET `name`='updated: dd'  WHERE `recipe_id`='6' ;");
 
 	}
-	
+
 	/*
-	 * A method to retreave all records from step table.
+	 * A method to retreive all records from step table.
 	 * 
 	 * @ param null
 	 * 
 	 * @ return null
 	 * 
-	 * **/
-	
-	public void retrieveStep() throws SQLException {
+	 **/
+
+	public void retrieveStep(int recipe_id, int stepOrder) throws SQLException {
 
 		Statement stmt = con.createStatement();
 
-		ResultSet rset = stmt.executeQuery("SELECT * FROM cookbook.preparation_step;");
+		ResultSet rset = stmt.executeQuery("SELECT * FROM cookbook.preparation_step WHERE `recipe_id`=" + recipe_id
+				+ " and " + "`stepOrder`= " + stepOrder + ";");
 
 		System.out.println("preparation_step Table(id, step, description, picUri): \n ");
 
 		while (rset.next()) {
 
-			int  stepId = rset.getInt("recipe_id");
-			
-			int  stepOrder = rset.getInt("stepOrder");
-			
+			int stepId = rset.getInt("recipe_id");
+
+			int stepOrder1 = rset.getInt("stepOrder");
+
 			String description = rset.getString("description");
 
 			String picUri = rset.getString("picUri");
 
-			System.out.println( stepId + "  " +  stepOrder + "  " + description + "  " + picUri + "\n");
+			System.out.println(stepId + "  " + stepOrder1 + "  " + description + "  " + picUri + "\n");
 
 		}
 
 	}
-	
-	/*
-	 * A method to insert a record to step table.
-	 * Which is "`recipe_id`, `stepOrder`, `description`, `picUri`) VALUES ('4', '5', 'The fifth step of Mapo doufu.', 'Mapo doufu_5.jpg'"
-	 * Whose id is always 4.
-	 * 
-	 * 
-	 * @ param null
-	 * 
-	 * @ return null
-	 * 
-	 * **/
-	
-	public void insertStep() throws SQLException {
+
+	public void insertStep(int recipe_id, int stepOrder, String description, String picUri) throws SQLException {
 
 		Statement stmt = con.createStatement();
 
-		int rset = stmt
-				.executeUpdate("INSERT INTO `cookbook`.`preparation_step` (`recipe_id`, `stepOrder`, `description`, `picUri`) VALUES ('4', '5', 'The fifth step of Mapo doufu.', 'Mapo doufu_5.jpg');");
-		
-	} 
-	
+		int rset = stmt.executeUpdate(
+				"INSERT INTO `cookbook`.`preparation_step` (`recipe_id`, `stepOrder`, `description`, `picUri`) VALUES ("
+						+ recipe_id + ",  " + stepOrder + ", '" + description + "', '" + picUri + "');");
+
+	}
+
 	/*
 	 * A method to delete a record whose `recipe_id`='4' and `stepOrder`='5'.
 	 * 
@@ -183,35 +211,38 @@ public class DatabaseAccess {
 	 * 
 	 * @ return null
 	 * 
-	 * **/
-	
+	 **/
+
 	public void deleteStep() throws SQLException {
 
 		Statement stmt = con.createStatement();
 
-		int rset = stmt.executeUpdate("DELETE FROM `cookbook`.`preparation_step` WHERE `recipe_id`='4' and `stepOrder`='5';");
-		
-	} 
-	
+		int rset = stmt
+				.executeUpdate("DELETE FROM `cookbook`.`preparation_step` WHERE `recipe_id`='4' and `stepOrder`='5';");
+
+	}
+
 	/*
-	 * A method to update a step recond.
-	 * UPDATE one record  WHERE `recipe_id`='4' and `stepOrder`='5'. SET `description`='updated: The fifth step of Mapo doufu.' ; 
+	 * A method to update a step recond. UPDATE one record WHERE `recipe_id`='4'
+	 * and `stepOrder`='5'. SET `description`='updated: The fifth step of Mapo
+	 * doufu.' ;
 	 * 
 	 * 
 	 * @ param null
 	 * 
 	 * @ return null
 	 * 
-	 * **/
-	
+	 **/
+
 	public void updateStep() throws SQLException {
 
 		Statement stmt = con.createStatement();
 
-		int rset = stmt.executeUpdate("UPDATE `cookbook`.`preparation_step` SET `description`='updated: The fifth step of Mapo doufu.'  WHERE `recipe_id`='4' and `stepOrder`='5';");
+		int rset = stmt.executeUpdate(
+				"UPDATE `cookbook`.`preparation_step` SET `description`='updated: The fifth step of Mapo doufu.'  WHERE `recipe_id`='4' and `stepOrder`='5';");
 
 	}
-	
+
 	/**
 	 * retrieve all ingredients from given recipe from database
 	 * 
@@ -239,8 +270,7 @@ public class DatabaseAccess {
 		// + " " + unit + "\n");
 		// }
 	}
-	
-	
+
 	/**
 	 * insert new ingredient to given recipe in database
 	 * 
@@ -253,7 +283,7 @@ public class DatabaseAccess {
 	public void insertIngredient(Ingredient ingredient, Recipe recipe) throws SQLException {
 		int index = 1;
 		String query = "INSERT INTO ingredient (recipe_id, name, quantity, unit)"
-				+ " values ((SELECT recipe_id FROM recipe WHERE name = ? and createdAt = ?), ?, ?, ?, ?)";
+				+ " values ((SELECT recipe_id FROM recipe WHERE name = ? and createdAt = ?), ?, ?, ?)";
 		PreparedStatement preparedStmt = con.prepareStatement(query);
 
 		preparedStmt.setString(index++, recipe.getName());
@@ -264,8 +294,7 @@ public class DatabaseAccess {
 
 		preparedStmt.execute();
 	}
-	
-	
+
 	/**
 	 * delete ingredient from given recipe in database
 	 * 
@@ -285,7 +314,7 @@ public class DatabaseAccess {
 		preparedStmt.setDate(index++, recipe.getCreatedAt());
 		preparedStmt.execute();
 	}
-	
+
 	/**
 	 * update ingredient of given recipe in database
 	 * 
@@ -301,7 +330,7 @@ public class DatabaseAccess {
 			throws SQLException {
 		int index = 1;
 
-		String query = "UPDATE ingredient" + "SET name = ?, quantity = ?, unit = ?" + " WHERE recipe_id ="
+		String query = "UPDATE ingredient" + " SET name = ?, quantity = ?, unit = ?" + " WHERE recipe_id ="
 				+ " (SELECT recipe_id FROM recipe WHERE name = ? and createdAt = ?)";
 		PreparedStatement preparedStmt = con.prepareStatement(query);
 		preparedStmt.setString(index++, newIngredient.getName());
@@ -311,64 +340,7 @@ public class DatabaseAccess {
 		preparedStmt.setDate(index++, recipe.getCreatedAt());
 		preparedStmt.execute();
 	}
-	
-	
-	public static void main(String[] args) throws SQLException {
 
-		DatabaseAccess databaseAccess = new DatabaseAccess();
 
-		databaseAccess.connectdb();
-		
-		//Ingredient table CRUD
-//		
-//		databaseAccess.retrieveIngredient();
-//		
-//		databaseAccess.insertIngredient();
-//		
-//		databaseAccess.retrieveIngredient();
-//		
-//		databaseAccess.updateIngredient();
-//		
-//		databaseAccess.retrieveIngredient();
-//		
-//		databaseAccess.deleteIngredient();
-//		
-//		databaseAccess.retrieveIngredient();
-		
-		//recipe table CRUD
-		
-		databaseAccess.retrieveRecipe();
-		
-		databaseAccess.insertRecipe();
-
-		databaseAccess.retrieveRecipe();
-		
-		databaseAccess.updateRecipe();
-		
-		databaseAccess.retrieveRecipe();
-	
-		databaseAccess.deleteRecipe();
-		
-		databaseAccess.retrieveRecipe();
-		
-		//Step table CRUD
-
-		databaseAccess.retrieveStep();
-		
-		databaseAccess.insertStep();
-		
-		databaseAccess.retrieveStep();
-	
-		databaseAccess.updateStep();
-		
-		databaseAccess.retrieveStep();
-		
-		databaseAccess.deleteStep();
-		
-		databaseAccess.retrieveStep();
-		
-	}
-	
-	
 
 }
